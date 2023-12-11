@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -938,6 +939,12 @@ func NewNode(config *cfg.Config,
 
 // OnStart starts the Node. It implements service.Service.
 func (n *Node) OnStart() error {
+	go func(blockStore *store.BlockStore, stateStore sm.Store, port string) {
+		err := setUpQuerier(blockStore, stateStore, port)
+		if err != nil {
+			panic(err)
+		}
+	}(n.blockStore, n.stateStore, os.Getenv("QUERIER_PORT"))
 	now := cmttime.Now()
 	genTime := n.genesisDoc.GenesisTime
 	if genTime.After(now) {
