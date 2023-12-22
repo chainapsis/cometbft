@@ -65,6 +65,7 @@ func (q *CosmosQuerier) GetBlockStreamFrom(stream CosmosIndexer_GetBlockStreamFr
 		}
 		if err != nil {
 			fmt.Printf("Stream Receive Error: %s\n", err.Error())
+			panic(err)
 			continue
 		}
 
