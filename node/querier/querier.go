@@ -113,7 +113,7 @@ func (q *CosmosQuerier) getBlockFromLocal(height int64) (*Block, error) {
 		pbTx := Tx{
 			TxHash:    txHash,
 			Code:      txr.Code,
-			Log:       txr.Log,
+			Log:       "",
 			Info:      txr.Info,
 			GasWanted: txr.GasWanted,
 			GasUsed:   txr.GasUsed,
