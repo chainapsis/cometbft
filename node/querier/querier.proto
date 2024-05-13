@@ -1,0 +1,45 @@
+syntax = "proto3";
+package querier;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/chainapsis/cometbft/node/querier";
+
+// Data Schema
+
+message Block {
+  int64 height = 1;
+  string chain_id = 2;
+  google.protobuf.Timestamp time = 3;
+  string block_hash = 4;
+  string app_hash = 5;
+  string consensus_hash = 6;
+  repeated Tx txs = 7;
+}
+
+message Tx {
+  string tx_hash = 1;
+  uint32 code = 2;
+  string log = 3;
+  string info = 4;
+  int64 gas_wanted = 5;
+  int64 gas_used = 6;
+  string codespace = 7;
+  bytes tx_bytes = 8;
+}
+
+// Request-Response Schema
+
+message GetBlockRequest {
+  int64 height = 1;
+}
+
+message GetBlockResponse {
+  optional Block block = 1;
+  bool isPresent = 2;
+}
+
+service CosmosIndexer {
+  rpc GetBlock(GetBlockRequest) returns (GetBlockResponse) {}
+  rpc GetBlockStreamFrom(stream GetBlockRequest) returns (stream GetBlockResponse) {}
+}
