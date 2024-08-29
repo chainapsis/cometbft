@@ -100,15 +100,14 @@ func (q *CosmosQuerier) getBlockFromLocal(height int64) (*Block, error) {
 	if tmBlock == nil {
 		return nil, errBlockNotFound
 	}
-	abciResponse, err := q.StateStore.LoadABCIResponses(height)
+	responseFinalizedBlock, err := q.StateStore.LoadFinalizeBlockResponse(height)
 	if err != nil {
 		return nil, err
 	}
-
 	var txs []*Tx
 
 	for i, tx := range tmBlock.Data.Txs {
-		txr := abciResponse.DeliverTxs[i]
+		txr := responseFinalizedBlock.TxResults[i]
 		txHash := fmt.Sprintf("%X", tx.Hash())
 		pbTx := Tx{
 			TxHash:    txHash,
